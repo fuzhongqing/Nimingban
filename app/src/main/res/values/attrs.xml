@@ -1,0 +1,12 @@
+<resources>
+
+
+    <declare-styleable name="ButtonBarContainerTheme">
+        <attr name="metaButtonBarStyle" format="reference" />
+        <attr name="metaButtonBarButtonStyle" format="reference" />
+    </declare-styleable>
+
+    <declare-styleable name="GifImageView">
+        <attr name="auto_play" format="boolean" />
+    </declare-styleable>
+</resources>
