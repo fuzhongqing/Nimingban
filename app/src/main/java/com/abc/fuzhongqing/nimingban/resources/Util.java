@@ -24,7 +24,7 @@ public class Util {
         // 首先保存图片
         File appDir = new File(Environment.getExternalStorageDirectory(), "Boohee");
         if (!appDir.exists()) {
-            appDir.mkdir();
+            boolean r = appDir.mkdir();
         }
         String fileName = System.currentTimeMillis() + ".jpg";
         File file = new File(appDir, fileName);

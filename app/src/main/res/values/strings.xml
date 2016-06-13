@@ -15,6 +15,10 @@
     <string name="title_activity_po">匿名版</string>
     <string name="title_activity_settings">Settings</string>
 
+    <string name="name_draw">自制匿名版</string>
+    <string name="email">fuzhongqing1995@gmail.com</string>
+    <string name="description_draw">logo</string>
+
     <!-- Strings related to Settings -->
 
     <!-- Example General settings -->
