@@ -63,8 +63,8 @@ public class ActivityImageShow extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Util.saveImageToGallery(ActivityImageShow.this,mImageView.getDrawingCache());
-                Snackbar.make(view, true?"保存成功":"保存失败", Snackbar.LENGTH_LONG)
+                Boolean ok = Util.saveImageToGallery(ActivityImageShow.this,mImageView.getDrawingCache());
+                Snackbar.make(view, ok?"保存成功":"保存失败", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
         });

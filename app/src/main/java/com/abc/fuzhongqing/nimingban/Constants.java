@@ -13,5 +13,6 @@ public class Constants {
     public static String defaultFid = "4"; //综合版1
     public static String defaultFname = "综合版1"; //综合版1
 
-    public static String appFilepath = "nimnigban";
+    public static String appFilepath = "nimingban";
+    public static String imageFilePerfix = "/img";
 }

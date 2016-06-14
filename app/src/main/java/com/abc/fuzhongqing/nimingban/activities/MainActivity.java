@@ -58,7 +58,6 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
 
-        Util.fileSystemManager(MainActivity.this);
         app = (NmbApplication) getApplication();
         fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {

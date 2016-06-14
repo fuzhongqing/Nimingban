@@ -20,12 +20,14 @@ import java.io.IOException;
  *
  */
 public class Util {
-    public static void saveImageToGallery(Context context, Bitmap bmp) {
+    public static boolean saveImageToGallery(Context context, Bitmap bmp) {
         // 首先保存图片
-        File appDir = new File(Environment.getExternalStorageDirectory(), "Boohee");
+        File appDir = new File(Environment.getExternalStorageDirectory(), Constants.appFilepath + Constants.imageFilePerfix);
+        boolean ok = false;
         if (!appDir.exists()) {
-            boolean r = appDir.mkdir();
+            ok = appDir.mkdirs();
         }
+        if (!ok) return false;
         String fileName = System.currentTimeMillis() + ".jpg";
         File file = new File(appDir, fileName);
         try {
@@ -33,8 +35,6 @@ public class Util {
             bmp.compress(Bitmap.CompressFormat.JPEG, 100, fos);
             fos.flush();
             fos.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -48,19 +48,9 @@ public class Util {
         }
         // 最后通知图库更新
         context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + appDir)));
+        return true;
     }
-    public static void fileSystemManager(Context mContext) {
-        Log.i("Storage","----start------");
-        File appDir = new File(Environment.getExternalStorageDirectory(),Constants.appFilepath);
 
-        Log.i("Storage", appDir.toString());
-        Log.i("Storage", appDir.exists() + "|" +appDir.canRead() +"|" +appDir.canWrite()+ "|" +appDir.canExecute());
-        if (!appDir.exists()) {
-            Log.i("Storage","create file success : " +appDir.mkdirs());
-        }
-        Log.i("Storage", appDir.exists() + "|" +appDir.canRead() +"|" +appDir.canWrite()+ "|" +appDir.canExecute());
-
-    }
     /* Checks if external storage is available for read and write */
     public static boolean isExternalStorageWritable() {
         String state = Environment.getExternalStorageState();
