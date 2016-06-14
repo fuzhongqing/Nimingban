@@ -27,7 +27,7 @@ public class Util {
         if (!appDir.exists()) {
             ok = appDir.mkdirs();
         }
-        if (!ok) return false;
+        if (!ok && !appDir.exists()) return false;
         String fileName = System.currentTimeMillis() + ".jpg";
         File file = new File(appDir, fileName);
         try {

@@ -34,6 +34,7 @@ import com.litesuits.http.listener.HttpListener;
 import com.litesuits.http.request.StringRequest;
 import com.litesuits.http.request.param.CacheMode;
 import com.litesuits.http.response.Response;
+import com.zzhoujay.richtext.RichText;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -63,8 +64,7 @@ public class MainActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "我还没有想好这个按钮干嘛,嘿嘿", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                startActivity(new Intent(MainActivity.this,ReplyActivity.class));
             }
         });
 
@@ -163,7 +163,9 @@ public class MainActivity extends AppCompatActivity
                             JSONObject tmp = forums.getJSONObject(j);
                             if (tmp.getString("id").equals(app.currForm)) {
                                 founded = true;
-                                text.setText(Html.fromHtml(tmp.getString("msg")));
+                                RichText.from(tmp.getString("msg"))
+                                        .into(text);
+                                //TODO::添加对值班室Intent的支持
                                 break;
                             }
                         }
