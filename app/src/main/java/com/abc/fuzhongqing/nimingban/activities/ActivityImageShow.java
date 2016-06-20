@@ -29,6 +29,8 @@ public class ActivityImageShow extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             this.finish();
+            overridePendingTransition(android.R.anim.slide_in_left,
+                    android.R.anim.slide_out_right);
         }
         return super.onOptionsItemSelected(item);
     }

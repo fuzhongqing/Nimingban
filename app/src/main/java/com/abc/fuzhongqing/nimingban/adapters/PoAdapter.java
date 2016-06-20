@@ -16,8 +16,6 @@ import android.widget.TextView;
 import com.abc.fuzhongqing.nimingban.Constants;
 import com.abc.fuzhongqing.nimingban.R;
 import com.abc.fuzhongqing.nimingban.activities.ActivityImageShow;
-import com.abc.fuzhongqing.nimingban.activities.MainActivity;
-import com.abc.fuzhongqing.nimingban.activities.PoActivity;
 import com.abc.fuzhongqing.nimingban.resources.Http;
 import com.litesuits.http.LiteHttp;
 import com.litesuits.http.listener.HttpListener;
@@ -40,7 +38,7 @@ import static android.support.v7.widget.RecyclerView.ViewHolder;
  */
 public class PoAdapter extends RecyclerView.Adapter<ViewHolder> {
 
-    public static enum ITEM_TYPE {
+    public enum ITEM_TYPE {
         ITEM_TYPE_FIRST,
         ITEM_TYPE_NORMAL,
         ITEM_TYPE_PROCESS

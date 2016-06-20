@@ -1,5 +1,6 @@
 package com.abc.fuzhongqing.nimingban.activities;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -8,7 +9,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Html;
 import android.util.Log;
 import android.view.SubMenu;
 import android.view.View;
@@ -21,16 +21,15 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.abc.fuzhongqing.nimingban.Constants;
 import com.abc.fuzhongqing.nimingban.NmbApplication;
 import com.abc.fuzhongqing.nimingban.R;
 import com.abc.fuzhongqing.nimingban.adapters.ListAdapter;
 import com.abc.fuzhongqing.nimingban.resources.Http;
-import com.abc.fuzhongqing.nimingban.resources.Util;
 import com.litesuits.http.LiteHttp;
 import com.litesuits.http.exception.HttpException;
-import com.litesuits.http.listener.HttpListener;
 import com.litesuits.http.request.StringRequest;
 import com.litesuits.http.request.param.CacheMode;
 import com.litesuits.http.response.Response;
@@ -51,6 +50,7 @@ public class MainActivity extends AppCompatActivity
     private NmbApplication app;
     private Toolbar toolbar;
     private FloatingActionButton fab;
+    private NavigationView mNavigationView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,25 +71,28 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        assert drawer != null;
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+        if (navigationView != null) {
+            navigationView.setNavigationItemSelectedListener(this);
+        }
 
         mSwipeRefreshWidget = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout);
-        mSwipeRefreshWidget.setColorSchemeResources(
-                R.color.colorLoading1,
-                R.color.colorLoading2,
-                R.color.colorLoading3,
-                R.color.colorLoading4);
+        mNavigationView = (NavigationView) findViewById(R.id.nav_view);
+
+
+        if (mSwipeRefreshWidget != null) {
+            mSwipeRefreshWidget.setColorSchemeResources(R.color.colorLoading1,R.color.colorLoading2,R.color.colorLoading3,R.color.colorLoading4);
+        }
         mSwipeRefreshWidget.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 applyPage(null,null);
             }
         });
-
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
@@ -125,7 +128,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
+        if (drawer!=null && drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
@@ -146,8 +149,15 @@ public class MainActivity extends AppCompatActivity
 
         switch (id) {
             case R.id.action_borad:
-                AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+                if (app.menu == null) break;
+                final AlertDialog.Builder dialog = new AlertDialog.Builder(this);
                 dialog.setTitle("本版信息");
+                dialog.setPositiveButton("好的", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                });
                 TextView text = new TextView(this);
                 text.setPadding(60,0,60,0);
                 boolean founded =  false;
@@ -195,20 +205,23 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
+        if (id == 0)  {
+            if (item.getTitle().toString().startsWith("加载失败")) updataMenu();
+            return true;
+        }
         applyPage(id + "",item.getTitle() + "");
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        assert drawer != null;
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
 
     private void updataMenu() {
-        NavigationView mNavigationView = (NavigationView) findViewById(R.id.nav_view);
 
-        assert mNavigationView != null;
         final Menu mMenu = mNavigationView.getMenu();
-
-
-
+        mMenu.clear();
+        mMenu.add("加载中....");
+        mMenu.getItem(0).setIcon(R.mipmap.loading0);
         Http.getHttp(MainActivity.this).executeAsync(new StringRequest(Constants.getForumList)
                 .setCacheMode(CacheMode.NetFirst).setHttpListener(
                 new HttpListener<String>() {
@@ -216,7 +229,6 @@ public class MainActivity extends AppCompatActivity
                     public void onSuccess(String s, Response<String> response) {
                         super.onSuccess(s, response);
                         mMenu.clear();
-
                         try {
                             JSONArray jsonArray = new JSONArray(s);
                             app.menu = jsonArray;
@@ -241,6 +253,14 @@ public class MainActivity extends AppCompatActivity
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
+                    }
+
+                    @Override
+                    public void onFailure(HttpException e, Response<String> response) {
+                        //super.onFailure(e, response);
+                        Toast.makeText(MainActivity.this,"错误:"+ e.getLocalizedMessage(),Toast.LENGTH_LONG).show();
+                        mMenu.clear();
+                        mMenu.add("加载失败,点击重新加载");
                     }
                 }
         ));
@@ -279,7 +299,7 @@ public class MainActivity extends AppCompatActivity
 
     abstract class HttpListener<T> extends com.litesuits.http.listener.HttpListener<T> {
         @Override
-        public void onFailure(HttpException e, Response response) {
+        public void onFailure(HttpException e, Response<T> response) {
             super.onFailure(e, response);
             Snackbar.make(fab, "没有网啊~", Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show();

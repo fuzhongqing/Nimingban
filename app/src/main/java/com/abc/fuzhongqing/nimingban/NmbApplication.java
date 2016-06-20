@@ -2,8 +2,6 @@ package com.abc.fuzhongqing.nimingban;
 
 import android.app.Application;
 
-import com.abc.fuzhongqing.nimingban.resources.Util;
-
 import org.json.JSONArray;
 
 /**

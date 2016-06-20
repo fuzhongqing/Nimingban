@@ -7,24 +7,32 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.abc.fuzhongqing.nimingban.activities.ReplyActivity"
     tools:showIn="@layout/activity_reply">
-
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="abc"
-        android:id="@+id/editText"/>
+        android:gravity="fill_horizontal"
+        android:hint="@string/reply_hint"
+
+        android:id="@+id/editText" />
     <LinearLayout
         android:id="@+id/reply_menu"
-        android:layout_marginBottom="0dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@id/editText"
         android:background="@color/colorPrimary"
-        android:layout_marginEnd="0dp">
+        android:translationZ="32dp"
+        android:layout_alignParentBottom="true">
 
         <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:padding="6dp"
+            android:src="@mipmap/ic_chat_white_48dp"
+            android:background="@color/colorPrimary"/>
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="6dp"
             android:src="@mipmap/ic_chat_white_48dp"
             android:background="@color/colorPrimary"/>
     </LinearLayout>

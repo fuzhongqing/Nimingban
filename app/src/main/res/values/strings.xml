@@ -8,7 +8,7 @@
 
     <string name="action_settings">设置</string>
     <string name="action_borad">本版公告</string>
-
+    <string name="reply_hint">发文前请注意版规呦~</string>
     <string name="title_activity_activity_image_show">图片查看</string>
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
