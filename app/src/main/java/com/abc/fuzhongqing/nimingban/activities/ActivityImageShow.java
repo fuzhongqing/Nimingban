@@ -5,9 +5,12 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.view.MotionEventCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -22,6 +25,7 @@ import uk.co.senab.photoview.PhotoViewAttacher;
 
 public class ActivityImageShow extends AppCompatActivity {
 
+    final String DEBUG_TAG = "ImageShow Debug";
     ImageView mImageView;
     PhotoViewAttacher mAttacher;
     FloatingActionButton fab;
@@ -29,8 +33,7 @@ public class ActivityImageShow extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             this.finish();
-            overridePendingTransition(android.R.anim.slide_in_left,
-                    android.R.anim.slide_out_right);
+            //overridePendingTransition(android.R.anim.slide_in_left,android.R.anim.slide_out_right);
         }
         return super.onOptionsItemSelected(item);
     }
@@ -71,5 +74,4 @@ public class ActivityImageShow extends AppCompatActivity {
             }
         });
     }
-
 }

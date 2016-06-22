@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
+import android.text.util.Linkify;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,10 +24,13 @@ import com.litesuits.http.request.AbstractRequest;
 import com.litesuits.http.request.BitmapRequest;
 import com.litesuits.http.request.param.CacheMode;
 import com.litesuits.http.response.Response;
+import com.zzhoujay.richtext.RichText;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.regex.Pattern;
 
 import static android.support.v7.widget.RecyclerView.OnClickListener;
 import static android.support.v7.widget.RecyclerView.ViewHolder;
@@ -37,6 +41,8 @@ import static android.support.v7.widget.RecyclerView.ViewHolder;
  *
  */
 public class ListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+
+    static Pattern REPLYID_TAG_PATTERN = Pattern.compile("\\>\\>\\d+");
 
     private final LayoutInflater mLayoutInflater;
     private final Context mContext;
@@ -65,25 +71,18 @@ public class ListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         //if (!holder.isRecyclable())
-            holder.setIsRecyclable(true);
+        holder.setIsRecyclable(true);
         //holder.setIsRecyclable(true);
         try {
             final ImageViewHolder tmp = (ImageViewHolder) holder;
             JSONObject d = datas.getJSONObject(position);
 
             tmp.v.setTag(Integer.parseInt(d.getString("id")));
-            tmp.v.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(mContext, PoActivity.class);
-                    intent.putExtra("po",v.getTag().toString());
-                    //System.out.println(v.getTag());
-                    mContext.startActivity(intent);
-                }
-            });
+            tmp.v.setOnClickListener(new onClickListener());
             String isRedName = d.getString("admin");
             String isSega    = d.getString("sage");
             tmp.mTextView.setText(Html.fromHtml(d.getString("content")));
+            Linkify.addLinks(tmp.mTextView,REPLYID_TAG_PATTERN,null);
             tmp.mId.setText(d.getString("userid"));
             tmp.mNo.setText(d.getString("id"));
             tmp.mTime.setText(d.getString("now").substring(5));
@@ -159,6 +158,16 @@ public class ListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             mSega     = (TextView) itemView.findViewById(R.id.card_sega);
             image     = (ImageView)itemView.findViewById(R.id.imageThumb);
 
+        }
+    }
+    private class onClickListener implements OnClickListener {
+
+        @Override
+        public void onClick(View v) {
+            Intent intent = new Intent(mContext, PoActivity.class);
+            intent.putExtra("po",v.getTag().toString());
+            //System.out.println(v.getTag());
+            mContext.startActivity(intent);
         }
     }
 }

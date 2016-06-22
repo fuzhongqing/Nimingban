@@ -175,6 +175,7 @@ public class MainActivity extends AppCompatActivity
                                 founded = true;
                                 RichText.from(tmp.getString("msg"))
                                         .into(text);
+
                                 //TODO::添加对值班室Intent的支持
                                 break;
                             }

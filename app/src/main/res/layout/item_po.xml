@@ -51,6 +51,7 @@
             android:id="@+id/imageThumb"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:autoLink="web|email|map"
             android:layout_marginTop="4dp"
             />
 

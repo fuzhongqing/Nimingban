@@ -6,6 +6,11 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
+import android.text.Spannable;
+import android.text.Spanned;
+import android.text.style.URLSpan;
+import android.text.util.Linkify;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +33,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.regex.Pattern;
+
 import static android.support.v7.widget.RecyclerView.OnClickListener;
 import static android.support.v7.widget.RecyclerView.ViewHolder;
 
@@ -38,6 +45,8 @@ import static android.support.v7.widget.RecyclerView.ViewHolder;
  */
 public class PoAdapter extends RecyclerView.Adapter<ViewHolder> {
 
+    public static Pattern REPLYID_TAG_PATTERN = Pattern.compile("\\>\\>(No.)?\\d+");
+
     public enum ITEM_TYPE {
         ITEM_TYPE_FIRST,
         ITEM_TYPE_NORMAL,
@@ -46,9 +55,9 @@ public class PoAdapter extends RecyclerView.Adapter<ViewHolder> {
     private final LayoutInflater mLayoutInflater;
     private final Context mContext;
     public  boolean isLoading;
+    private String Poid;
 
     public void setDatas(JSONObject datas) {
-        //System.out.println(datas);
         this.datas = datas;
     }
 
@@ -58,13 +67,13 @@ public class PoAdapter extends RecyclerView.Adapter<ViewHolder> {
         this.mContext = context;
         this.mLayoutInflater = LayoutInflater.from(context);
         isLoading = false;
-        //datas = new JSONObject();
     }
 
-    public void append(JSONArray a) throws JSONException {
+    public JSONObject append(JSONArray a) throws JSONException {
         JSONArray replys = datas.getJSONArray("replys");
         for (int i = 0;i < a.length(); i++)
             replys.put(a.getJSONObject(i));
+        return datas;
     }
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -106,11 +115,13 @@ public class PoAdapter extends RecyclerView.Adapter<ViewHolder> {
             String isRedName = d.getString("admin");
             String isSega    = d.getString("sage");
             if (position == 0) {
+                Poid = d.getString("userid");
                 tmp.mReplys.setText("回复:" + d.getString("replyCount"));
                 if (!isSega.equals("1")) tmp.mSega.setText("");
             }
             tmp.mTextView.setText(Html.fromHtml(d.getString("content")));
-            tmp.mId.setText(d.getString("userid"));
+            Linkify.addLinks(tmp.mTextView,REPLYID_TAG_PATTERN,null);
+            tmp.mId.setText(d.getString("userid")+ ((Poid.equals(d.getString("userid"))&&(position!=0))?"(PO)":""));
             tmp.mNo.setText(d.getString("id"));
             tmp.mTime.setText(d.getString("now").substring(5));
             if (isRedName.equals("1")) tmp.mId.setTextColor(Color.RED);
