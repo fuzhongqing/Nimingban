@@ -8,8 +8,12 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.NetworkImageView;
+import com.fuzho.nimingban.Application;
 import com.fuzho.nimingban.R;
 import com.fuzho.nimingban.pojo.Article;
+import com.fuzho.nimingban.tools.BitMapCache;
 import com.zzhoujay.richtext.ImageHolder;
 import com.zzhoujay.richtext.RichText;
 import com.zzhoujay.richtext.callback.ImageFixCallback;
@@ -45,15 +49,18 @@ public class Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public void onBindViewHolder(ViewHolder holder, int position) {
         ImageViewHolder mHolder = (ImageViewHolder) holder;
         Article article = mArticles.get(position);
-
+        ImageLoader imageLoader = new ImageLoader(Application.getRequestQueue(),new BitMapCache());
         String img = "";
         //检查是否有图片
         if (!"".equals(article.getImgurl())) {
-            img = "</br><img src=\"http://img1.nimingban.com/thumb/" + article.getImgurl() +  "\" />";
+            img = "http://img1.nimingban.com/thumb/" + article.getImgurl();
             System.out.println(img);
+            mHolder.image.setDefaultImageResId(R.drawable.img_loading);
+            mHolder.image.setImageUrl(img,imageLoader);
         }
-        RichText.from(article.getContent() + img)
+        RichText.from(article.getContent())
                 .into(mHolder.mTextView);
+
         mHolder.mId.setText(article.getUid() + "");
         mHolder.mNo.setText(article.getId() + "");
         mHolder.mSega.setVisibility(article.isSege()?View.VISIBLE:View.INVISIBLE);
@@ -74,7 +81,7 @@ public class Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public class ImageViewHolder extends RecyclerView.ViewHolder {
 
         TextView mTextView,mNo,mId,mTime,mReplys,mSega;
-        ImageView image;
+        NetworkImageView image;
         View v;
         public ImageViewHolder(View itemView) {
             super(itemView);
@@ -85,7 +92,7 @@ public class Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             mTime     = (TextView) itemView.findViewById(R.id.card_time);
             mReplys   = (TextView) itemView.findViewById(R.id.card_replys);
             mSega     = (TextView) itemView.findViewById(R.id.card_sega);
-            image     = (ImageView)itemView.findViewById(R.id.imageThumb);
+            image     = (NetworkImageView) itemView.findViewById(R.id.imageThumb);
         }
     }
 }

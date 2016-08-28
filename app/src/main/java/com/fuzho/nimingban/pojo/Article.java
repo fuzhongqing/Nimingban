@@ -7,6 +7,7 @@ import org.json.JSONObject;
 
 /**
  * Created by fuzhongqing on 16/8/27.
+ *
  */
 public class Article {
     enum TYPE {
@@ -22,7 +23,6 @@ public class Article {
     private TYPE type;
     private String time;
     private boolean isSege;
-
     public int getId() {
         return id;
     }
@@ -99,6 +99,7 @@ public class Article {
         this.id = object.getInt("id");
         this.content = object.getString("content");
         this.imgurl = object.getString("img") + object.getString("ext");
+        if ("".equals(object.getString("img"))) this.imgurl = "";
         this.isadmin = object.getInt("admin") != 0;
         this.isSege = object.getInt("sage") != 0;
         this.isSege = object.getInt("sage") != 0;
