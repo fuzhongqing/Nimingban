@@ -10,6 +10,9 @@ import android.widget.TextView;
 
 import com.fuzho.nimingban.R;
 import com.fuzho.nimingban.pojo.Article;
+import com.zzhoujay.richtext.ImageHolder;
+import com.zzhoujay.richtext.RichText;
+import com.zzhoujay.richtext.callback.ImageFixCallback;
 
 
 import java.util.ArrayList;
@@ -41,7 +44,21 @@ public class Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         ImageViewHolder mHolder = (ImageViewHolder) holder;
-        mHolder.mTextView.setText(mArticles.get(position).getContent());
+        Article article = mArticles.get(position);
+
+        String img = "";
+        //检查是否有图片
+        if (!"".equals(article.getImgurl())) {
+            img = "</br><img src=\"http://img1.nimingban.com/thumb/" + article.getImgurl() +  "\" />";
+            System.out.println(img);
+        }
+        RichText.from(article.getContent() + img)
+                .into(mHolder.mTextView);
+        mHolder.mId.setText(article.getUid() + "");
+        mHolder.mNo.setText(article.getId() + "");
+        mHolder.mSega.setVisibility(article.isSege()?View.VISIBLE:View.INVISIBLE);
+        mHolder.mReplys.setText(article.getReplys() + "");
+        mHolder.mTime.setText(article.getTime());
     }
 
     @Override

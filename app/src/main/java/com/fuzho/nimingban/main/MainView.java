@@ -3,12 +3,12 @@ package com.fuzho.nimingban.main;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.view.ViewGroup;
 
 import com.fuzho.nimingban.BasePresenter;
 import com.fuzho.nimingban.MVPBaseActivity;
@@ -19,7 +19,11 @@ import java.util.ArrayList;
 
 /**
  * Created by fuzhongqing on 16/8/27.
- * 主界面
+ * 主界面ntegrate the remote changes
+ hint: (e.g., 'git pull ...') before pushing again.
+ hint: See the 'Note about fast-forwards' in 'git push --help' for details.
+ fuzhongngdeiMac:Nimingban2 fuzhongqing$
+
  */
 public class MainView extends MVPBaseActivity implements IMainView,NavigationView.OnNavigationItemSelectedListener {
 
@@ -28,6 +32,7 @@ public class MainView extends MVPBaseActivity implements IMainView,NavigationVie
     ActionBarDrawerToggle toggle;
     NavigationView mNavigationView;
     RecyclerView mRecyclerView;
+    SwipeRefreshLayout mSwipeRefreshLayout;
 
     Adapter mAdapter;
     @Override
@@ -57,6 +62,15 @@ public class MainView extends MVPBaseActivity implements IMainView,NavigationVie
         mAdapter = new Adapter(this);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.loadLayout);
+
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                ((MainPresenter)mPresenter).getArticles();
+            }
+        });
     }
 
     @Override
@@ -66,7 +80,13 @@ public class MainView extends MVPBaseActivity implements IMainView,NavigationVie
 
     @Override
     public void showProcessBar(boolean b) {
-
+        final boolean bs = b;
+        mSwipeRefreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                mSwipeRefreshLayout.setRefreshing(bs);
+            }
+        });
     }
 
     @Override

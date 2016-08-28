@@ -1,5 +1,7 @@
 package com.fuzho.nimingban.main;
 
+import android.util.Log;
+
 import com.fuzho.nimingban.BasePresenter;
 import com.fuzho.nimingban.pojo.Article;
 
@@ -18,6 +20,7 @@ public class MainPresenter extends BasePresenter implements IMainPresenter{
     }
     @Override
     public void getArticles() {
+        Log.d(TAG,"加载中....");
         ((MainView)getView()).showProcessBar(true);
         model.getArticles();
     }
@@ -29,13 +32,14 @@ public class MainPresenter extends BasePresenter implements IMainPresenter{
 
     @Override
     public void getArticlesCallBack(ArrayList<Article> articles) {
+        Log.d(TAG,"加载完成...");
         ((MainView)getView()).showProcessBar(false);
         ((MainView)getView()).setData(articles);
     }
 
     @Override
     public void onErrorCallBack(String msg) {
-
+        ((MainView)getView()).showProcessBar(false);
     }
 
 }
