@@ -49,10 +49,9 @@
 
         <com.android.volley.toolbox.NetworkImageView
             android:id="@+id/imageThumb"
-            android:layout_width="200dp"
-            android:layout_height="200dp"
             android:layout_marginTop="4dp"
-            />
+            android:layout_height="300dp"
+            android:layout_width="300dp"/>
 
     </LinearLayout>
     <LinearLayout

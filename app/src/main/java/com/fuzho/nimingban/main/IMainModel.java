@@ -11,4 +11,6 @@ import org.json.JSONObject;
 public interface IMainModel {
     void getArticles();
     void LoadMore();
+    void setTid(String tid);
+    void getMenu();
 }

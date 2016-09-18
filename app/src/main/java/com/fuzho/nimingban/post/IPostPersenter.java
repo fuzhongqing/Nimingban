@@ -1,4 +1,4 @@
-package com.fuzho.nimingban.main;
+package com.fuzho.nimingban.post;
 
 import com.fuzho.nimingban.pojo.Article;
 import com.fuzho.nimingban.pojo.Menu;
@@ -6,15 +6,13 @@ import com.fuzho.nimingban.pojo.Menu;
 import java.util.ArrayList;
 
 /**
- * Created by fuzhongqing on 16/8/27.
+ * Created by fuzho on 2016/9/6.
  */
-public interface IMainPresenter {
+public interface IPostPersenter {
     //面向View
-    void getArticles();
-    void LoadMore();
+    void getArticles(int id);
     void getMenuList();
     //面向Model
     void getArticlesCallBack(ArrayList<Article> articles);
     void onErrorCallBack(String msg);
-    void setMenuList(ArrayList<Menu> menus);
 }
