@@ -3,11 +3,8 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
-
-    <color name="colorLoading1">#4385F4</color>
-    <color name="colorLoading2">#34A853</color>
-    <color name="colorLoading3">#FBBC05</color>
-    <color name="colorLoading4">#EA4335</color>
-
-    <color name="black_overlay">#66000000</color>
+    <color name="mainColor0">#3369e8</color>
+    <color name="mainColor1">#d50f25</color>
+    <color name="mainColor2">#009925</color>
+    <color name="mainColor3">#eeb211</color>
 </resources>

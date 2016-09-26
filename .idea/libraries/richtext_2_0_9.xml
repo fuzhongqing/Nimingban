@@ -1,0 +1,15 @@
+<component name="libraryTable">
+  <library name="richtext-2.0.9">
+    <ANNOTATIONS>
+      <root url="jar://$PROJECT_DIR$/app/build/intermediates/exploded-aar/com.zzhoujay.richtext/richtext/2.0.9/annotations.zip!/" />
+    </ANNOTATIONS>
+    <CLASSES>
+      <root url="file://$PROJECT_DIR$/app/build/intermediates/exploded-aar/com.zzhoujay.richtext/richtext/2.0.9/res" />
+      <root url="jar://$PROJECT_DIR$/app/build/intermediates/exploded-aar/com.zzhoujay.richtext/richtext/2.0.9/jars/classes.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.zzhoujay.richtext/richtext/2.0.9/c898dd6968aea35455e4149d11dfd1827b7d23a5/richtext-2.0.9-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

@@ -4,22 +4,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/main_vertical_margin"
-    android:paddingLeft="@dimen/main_horizontal_margin"
-    android:paddingRight="@dimen/main_horizontal_margin"
-    android:paddingTop="@dimen/main_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.abc.fuzhongqing.nimingban.activities.MainActivity"
-    tools:showIn="@layout/app_bar_main">
-    <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/swipeRefreshLayout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recyclerView"
+    tools:context="com.fuzho.nimingban.main.MainView"
+    tools:showIn="@layout/app_bar_main"
+    android:background="#EEE">
+        <android.support.v4.widget.SwipeRefreshLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:cacheColorHint="@null"
-            android:scrollbars="vertical" />
-    </android.support.v4.widget.SwipeRefreshLayout>
+            android:id="@+id/loadLayout">
+            <android.support.v7.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/main_list">
+            </android.support.v7.widget.RecyclerView>
+
+        </android.support.v4.widget.SwipeRefreshLayout>
 </RelativeLayout>

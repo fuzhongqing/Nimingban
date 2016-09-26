@@ -4,7 +4,10 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="8dp"
+    android:layout_marginLeft="6dp"
+    android:layout_marginRight="6dp"
+    android:layout_marginTop="4dp"
+    android:layout_marginBottom="4dp"
     android:id="@+id/cv_item"
     card_view:cardCornerRadius="4dp">
 
@@ -49,28 +52,35 @@
 
         <ImageView
             android:id="@+id/imageThumb"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:autoLink="web|email|map"
-            android:layout_marginTop="4dp"
-            />
+            android:layout_marginTop="6dp"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"/>
 
     </LinearLayout>
     <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/replys_block"
+            android:layout_weight="1">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/card_replys"
-            android:layout_weight="1"/>
+            android:text="@string/reply"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/card_replys"/>
+        </LinearLayout>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
             android:textColor="#EE0000"
-            android:text="SEGA"
+            android:text="SAGE"
             android:id="@+id/card_sega"/>
     </LinearLayout>
     </LinearLayout>
