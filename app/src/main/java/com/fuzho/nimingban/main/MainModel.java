@@ -34,7 +34,7 @@ public class MainModel implements IMainModel{
         mPresenter = m;
         //默认的tid
         tid = "4";
-        page = 0;
+        page = 1;
         mArticles = new ArrayList<>();
     }
     @Override
@@ -93,7 +93,7 @@ public class MainModel implements IMainModel{
 
     @Override
     public void setTid(String tid) {
-        page = 0;
+        page = 1;
         this.tid = tid;
     }
 
