@@ -15,6 +15,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Hashtable;
 
 
 /**
@@ -28,7 +29,6 @@ public class MainModel implements IMainModel{
     private String tid;
     private int page;
     private ArrayList<Article> mArticles;
-    
     public MainModel(MainPresenter m) {
         mRequestQueue = Application.getRequestQueue();
         mPresenter = m;
@@ -97,6 +97,9 @@ public class MainModel implements IMainModel{
         this.tid = tid;
     }
 
+    public String getTid() {
+        return this.tid;
+    }
     @Override
     public void getMenu() {
         mRequestQueue.add(new StringRequest("https://h.nimingban.com/Api/getForumList", new Response.Listener<String>() {

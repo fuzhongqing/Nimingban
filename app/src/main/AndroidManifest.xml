@@ -21,8 +21,22 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".post.PostView"
+        <activity
+            android:name=".post.PostView"
             android:launchMode="singleTop">
+        </activity>
+        <activity
+            android:name=".imageviewer.ImageViewerView"
+            android:launchMode="singleTop">
+        </activity>
+        <activity
+            android:name=".send.SendView"
+            android:launchMode="singleTop">
+        </activity>
+        <activity
+            android:name=".test.RichTextTestActivity"
+            android:label="@string/title_activity_rich_text_test"
+            android:theme="@style/AppTheme.NoActionBar">
         </activity>
     </application>
 

@@ -15,6 +15,8 @@ public abstract class ReachedBottomListener extends RecyclerView.OnScrollListene
 
     private String TAG = getClass().getSimpleName();
 
+    static int fabposition = 0;
+
     public static enum LAYOUT_MANAGER_TYPE {
         LINEAR,
         GRID,

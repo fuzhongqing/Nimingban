@@ -2,24 +2,28 @@ package com.fuzho.nimingban.main;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.v7.widget.LinearLayoutCompat;
+import android.graphics.Color;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.ImageLoader;
-import com.android.volley.toolbox.NetworkImageView;
 import com.fuzho.nimingban.Application;
+import com.fuzho.nimingban.MVPBaseActivity;
 import com.fuzho.nimingban.R;
+import com.fuzho.nimingban.imageviewer.ImageViewerView;
 import com.fuzho.nimingban.pojo.Article;
 import com.fuzho.nimingban.post.PostView;
+import com.fuzho.nimingban.richtext.Block;
+import com.fuzho.nimingban.richtext.OnClickListener;
+import com.fuzho.nimingban.richtext.RichText;
 import com.fuzho.nimingban.tools.BitMapCache;
-import com.zzhoujay.richtext.ImageHolder;
-import com.zzhoujay.richtext.RichText;
-import com.zzhoujay.richtext.callback.ImageFixCallback;
 
 
 import java.util.ArrayList;
@@ -37,12 +41,31 @@ public class Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private ArrayList<Article> mArticles;
     private ImageLoader mImageLoader;
     private boolean loading = false;
+    private boolean hasClick = false;
+    private Block mBlock;
 
-    public Adapter(Context context) {
+    public Adapter(Context context, boolean click) {
         this.mContext = context;
         this.mLayoutInflater = LayoutInflater.from(context);
         mArticles = new ArrayList<>();
         mImageLoader = new ImageLoader(Application.getRequestQueue(),new BitMapCache());
+        hasClick = click;
+        mBlock = new Block(">>No.\\d{1,10}");
+        mBlock.setForegroundColor(Color.BLUE);
+        mBlock.setClickCallback(new OnClickListener() {
+
+            private Object argv0;
+
+            @Override
+            public void onClick(View view) {
+                Log.d("test", argv0.toString());
+            }
+
+            @Override
+            public void setArgv0(Object argv0) {
+                this.argv0 = argv0;
+            }
+        });
     }
 
     public void setArticles(ArrayList<Article> as) {
@@ -68,37 +91,76 @@ public class Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
         ImageViewHolder mHolder = (ImageViewHolder) holder;
         mHolder.setIsRecyclable(false);
-        Article article = mArticles.get(position);
+        final Article article = mArticles.get(position);
         String img = "";
         //检查是否有图片
         if (!"".equals(article.getImgurl())) {
-            mHolder.image.setLayoutParams(new android.widget.LinearLayout.LayoutParams(300,300));
             img = "http://img1.nimingban.com/thumb/" + article.getImgurl();
-
+            /*
+            mHolder.image.setLayoutParams(new android.widget.LinearLayout.LayoutParams(500,300));
+            img = "http://img1.nimingban.com/thumb/" + article.getImgurl();
             System.out.println(img);
             mHolder.image.setDefaultImageResId(R.drawable.img_loading);
             mHolder.image.setImageUrl(img,mImageLoader);
+            mHolder.image.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(mContext, ImageViewerView.class);
+                    intent.putExtra("url", article.getImgurl());
+                    mContext.startActivity(intent);
+                }
+            });
+            */
+            mHolder.image.setLayoutParams(new android.widget.LinearLayout.LayoutParams(300,300));
+            Application.getLoader().from(img).to(mHolder.image, 300, 300);
+            mHolder.image.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(mContext, ImageViewerView.class);
+                    intent.putExtra("url", article.getImgurl());
+                    mContext.startActivity(intent);
+                }
+            });
         } else {
             mHolder.image.setLayoutParams(new android.widget.LinearLayout.LayoutParams(0,0));
         }
+
         RichText.from(article.getContent())
+                .addBlock(mBlock)
                 .into(mHolder.mTextView);
         final int fId = article.getId();
-        mHolder.mTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(mContext, PostView.class);
-                intent.putExtra(aritcle_id_key, fId);
-                mContext.startActivity(intent);
-                ((MainView)mContext).overridePendingTransition(0, 0);
-            }
-        });
+        if (hasClick) {
+            mHolder.mCardView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(mContext, PostView.class);
+                    intent.putExtra(aritcle_id_key, fId);
+                    mContext.startActivity(intent);
+                    ((MVPBaseActivity) mContext).overridePendingTransition(0, 0);
+                }
+            });
+            mHolder.mTextView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(mContext, PostView.class);
+                    intent.putExtra(aritcle_id_key, fId);
+                    mContext.startActivity(intent);
+                    ((MVPBaseActivity) mContext).overridePendingTransition(0, 0);
+                }
+            });
+        }
         mHolder.mId.setText("ID:"+ article.getUid());
+        if (article.isadmin()) {
+            mHolder.mId.setTextColor(Color.RED);
+            mHolder.mId.setText(article.getUid());
+        }
         mHolder.mNo.setText("NO." + article.getId());
-        mHolder.mSega.setVisibility(article.isSege()?View.VISIBLE:View.INVISIBLE);
+        mHolder.mSega.setVisibility(article.isSege()?View.VISIBLE:View.GONE);
+        if (article.getType() != Article.TYPE.MAIN) {
+            mHolder.mLinearLayout.setVisibility(View.GONE);
+        }
         mHolder.mReplys.setText(article.getReplys() + "");
         mHolder.mTime.setText(article.getTime());
-
     }
 
     @Override
@@ -118,8 +180,10 @@ public class Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public class ImageViewHolder extends RecyclerView.ViewHolder {
 
         TextView mTextView,mNo,mId,mTime,mReplys,mSega;
-        NetworkImageView image;
+        ImageView image;
         View v;
+        LinearLayout mLinearLayout;
+        CardView mCardView;
         public ImageViewHolder(View itemView) {
             super(itemView);
             v = itemView;
@@ -129,7 +193,9 @@ public class Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             mTime     = (TextView) itemView.findViewById(R.id.card_time);
             mReplys   = (TextView) itemView.findViewById(R.id.card_replys);
             mSega     = (TextView) itemView.findViewById(R.id.card_sega);
-            image     = (NetworkImageView) itemView.findViewById(R.id.imageThumb);
+            image     = (ImageView) itemView.findViewById(R.id.imageThumb);
+            mLinearLayout = (LinearLayout) itemView.findViewById(R.id.replys_block);
+            mCardView = (CardView) itemView.findViewById(R.id.cv_item);
         }
     }
 

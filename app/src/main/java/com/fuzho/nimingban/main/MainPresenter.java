@@ -1,5 +1,6 @@
 package com.fuzho.nimingban.main;
 
+import android.content.Intent;
 import android.support.v7.view.menu.MenuItemImpl;
 import android.support.v7.view.menu.SubMenuBuilder;
 import android.util.Log;
@@ -20,14 +21,14 @@ import java.util.ArrayList;
  */
 public class MainPresenter extends BasePresenter implements IMainPresenter{
     static final String TAG = "MainPresenter";
-    private IMainModel model;
+    private MainModel model;
     public MainPresenter() {
         model = new MainModel(this);
     }
     @Override
     public void getArticles() {
+        Log.d(TAG , "getArticles");
         ((MainView)getView()).mSnackbar.dismiss();
-        Log.d(TAG,"加载中....");
         ((MainView)getView()).showProcessBar(true);
         model.getArticles();
     }
@@ -45,7 +46,7 @@ public class MainPresenter extends BasePresenter implements IMainPresenter{
 
     @Override
     public void getArticlesCallBack(ArrayList<Article> articles) {
-        Log.d(TAG,"加载完成...");
+        Log.d(TAG , "getArticles [Success] callback");
         ((MainView)getView()).showProcessBar(false);
         ((MainView)getView()).showLoadingMore(false);
         ((MainView)getView()).setData(articles);
@@ -53,12 +54,16 @@ public class MainPresenter extends BasePresenter implements IMainPresenter{
 
     @Override
     public void onErrorCallBack(String msg) {
+        Log.d(TAG , "getArticles [Bad] callback");
         ((MainView)getView()).mSnackbar.setText("遇到一点问题,请下拉重新试一下").show();
         ((MainView)getView()).showProcessBar(false);
-        ((MainView)getView()).showToast(msg);
+        if (msg != null) {
+            ((MainView)getView()).showToast(msg);
+        }
     }
-
-
+    public void setTid(String id) {
+        model.setTid(id);
+    }
     @Override
     public void setMenuList(ArrayList<Menu> menus) {
         android.view.Menu mMenu = ((MainView)getView()).mMenu;
@@ -66,18 +71,11 @@ public class MainPresenter extends BasePresenter implements IMainPresenter{
             Menu e = menus.get(i);
             mMenu.addSubMenu(e.getName());
             for (int j = 0; j < e.getsMenu().size(); ++j) {
-                final Menu f = e.getsMenu().get(j);
+                Menu f = e.getsMenu().get(j);
+
                 mMenu.getItem(i).getSubMenu().add(f.getName());
                 MenuItem m = mMenu.getItem(i).getSubMenu().getItem(j);
-                m.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem menuItem) {
-                        model.setTid(f.getId());
-                        getArticles();
-                        return false;
-                    }
-                });
-                //mMenu.add(i.getName());
+                m.setIntent(new Intent().putExtra("id",f.getId()));
             }
         }
     }

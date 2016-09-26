@@ -5,12 +5,14 @@ import android.graphics.Bitmap;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.reflect.Field;
+
 /**
  * Created by fuzhongqing on 16/8/27.
  *
  */
 public class Article {
-    enum TYPE {
+    public enum TYPE {
         MAIN,
         REPLY
     }
@@ -110,4 +112,15 @@ public class Article {
             this.replys = object.getInt("replyCount");
         }
     }
+
+    Article() {
+        this.content = "EMPTY";
+    }
+
+    public Article(String str) {
+        this.content = str;
+    }
+
+    public static final Article emptyArticle = new Article();
+
 }
