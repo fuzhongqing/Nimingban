@@ -26,6 +26,7 @@ public class Loader implements Cloneable{
     private NetWork mNetWork;
     private String mUrl;
     private Context mContext;
+    private After mAfter;
 
     private Loader(Context ctx) {
         mContext = ctx;
@@ -83,6 +84,10 @@ public class Loader implements Cloneable{
         return BitmapFactory.decodeResource(mContext.getResources(), id);
     }
 
+    public Loader after(After after) {
+        this.mAfter = after;
+        return this;
+    }
     public Loader to(ImageView view) {
         return to(view ,0 ,0);
     }
@@ -92,6 +97,7 @@ public class Loader implements Cloneable{
             if (hit) {
                 //同步更新
                 view.setImageBitmap((Bitmap) mCache.get(mUrl));
+                if (mAfter != null) mAfter.run();
             } else {
                 //网络异步
                 if (mNetWork != null) {
@@ -106,12 +112,14 @@ public class Loader implements Cloneable{
                                 mCache.set(mUrl, bitmap);
                             }
                             view.setImageBitmap(bitmap);
+                            if (mAfter != null) mAfter.run();
                         }
                         @Override
                         public void onError(Object String) {
                             if (loadFromResId(failedRes) != null) {
                                 attach(mContext.getResources(),failedRes,maxWidth,maxHeight,view);
                             }
+                            if (mAfter != null) mAfter.run();
                         }
                     });
                     mNetWork.doRequest(mUrl ,maxWidth, maxHeight);

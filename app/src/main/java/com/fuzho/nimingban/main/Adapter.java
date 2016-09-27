@@ -3,6 +3,7 @@ package com.fuzho.nimingban.main;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -23,7 +24,6 @@ import com.fuzho.nimingban.post.PostView;
 import com.fuzho.nimingban.richtext.Block;
 import com.fuzho.nimingban.richtext.OnClickListener;
 import com.fuzho.nimingban.richtext.RichText;
-import com.fuzho.nimingban.tools.BitMapCache;
 
 
 import java.util.ArrayList;
@@ -48,7 +48,6 @@ public class Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         this.mContext = context;
         this.mLayoutInflater = LayoutInflater.from(context);
         mArticles = new ArrayList<>();
-        mImageLoader = new ImageLoader(Application.getRequestQueue(),new BitMapCache());
         hasClick = click;
         mBlock = new Block(">>No.\\d{1,10}");
         mBlock.setForegroundColor(Color.BLUE);
@@ -58,7 +57,7 @@ public class Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
             @Override
             public void onClick(View view) {
-                Log.d("test", argv0.toString());
+                showDialog(argv0.toString());
             }
 
             @Override
@@ -205,4 +204,18 @@ public class Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             super(itemView);
         }
     }
+
+    private void showDialog(String str) {
+
+        StringBuffer sb = new StringBuffer();
+        for (char c : str.toCharArray()) {
+            if (Character.isDigit(c)) sb.append(c);
+        }
+
+        new AlertDialog.Builder(mContext)
+        .setTitle(Application.contentCache.getString(sb.toString()))
+        .show();
+        ;//.setAdapter();
+    }
+
 }

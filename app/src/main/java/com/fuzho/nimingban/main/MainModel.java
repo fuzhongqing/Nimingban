@@ -39,7 +39,6 @@ public class MainModel implements IMainModel{
     }
     @Override
     public void getArticles() {
-        // TODO: 16/8/27 添加缓存功能
         mRequestQueue.add(new StringRequest("https://h.nimingban.com/Api/showf/id/" + tid + "/page/" + page, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -47,7 +46,9 @@ public class MainModel implements IMainModel{
                     JSONArray jsonArray = new JSONArray(response);
                     mArticles.clear();
                     for (int i = 0; i < jsonArray.length(); i++) {
-                        mArticles.add(new Article(jsonArray.getJSONObject(i)));
+                        Article t = new Article(jsonArray.getJSONObject(i));
+                        Application.contentCache.putString(t.getId() + "", t.getContent());
+                        mArticles.add(t);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -74,7 +75,9 @@ public class MainModel implements IMainModel{
                 try {
                     JSONArray jsonArray = new JSONArray(response);
                     for (int i = 0; i < jsonArray.length(); i++) {
-                        mArticles.add(new Article(jsonArray.getJSONObject(i)));
+                        Article t = new Article(jsonArray.getJSONObject(i));
+                        Application.contentCache.putString(t.getId() + "", t.getContent());
+                        mArticles.add(t);
                     }
                 } catch (JSONException e) {
                     //e.printStackTrace();
@@ -85,7 +88,6 @@ public class MainModel implements IMainModel{
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                System.out.println(error.getLocalizedMessage());
                 mPresenter.onErrorCallBack(error.getLocalizedMessage());
             }
         }));
@@ -124,4 +126,5 @@ public class MainModel implements IMainModel{
             }
         }));
     }
+
 }

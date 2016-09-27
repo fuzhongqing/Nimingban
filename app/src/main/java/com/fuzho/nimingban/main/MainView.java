@@ -28,7 +28,6 @@ import com.fuzho.nimingban.R;
 import com.fuzho.nimingban.pojo.Article;
 import com.fuzho.nimingban.send.SendView;
 import com.fuzho.nimingban.tools.ReachedBottomListener;
-import com.zzhoujay.richtext.RichText;
 
 import java.util.ArrayList;
 

@@ -9,7 +9,6 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.fuzho.nimingban.pojo.Article;
-import com.zzhoujay.richtext.RichText;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -42,11 +41,10 @@ public class PostModel implements IPostModel {
             page = 1;
             this.id = id;
         }
-        com.fuzho.nimingban.Application.getRequestQueue().add(new JsonObjectRequest("https://h.nimingban.com/Api/thread/id/" + id + "/page/1",
+        mRequestQueue.add(new JsonObjectRequest("https://h.nimingban.com/Api/thread/id/" + id + "/page/1",
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        Log.d("model",response.toString());
                         mArticles.clear();
                         try {
                             Article mainArticle = new Article(response);
@@ -54,7 +52,9 @@ public class PostModel implements IPostModel {
                             mArticles.add(mainArticle);
                             JSONArray jsonArray = response.getJSONArray("replys");
                             for (int i = 0;i < jsonArray.length(); ++i) {
-                                mArticles.add(new Article(jsonArray.getJSONObject(i)));
+                                Article t = new Article(jsonArray.getJSONObject(i));
+                                com.fuzho.nimingban.Application.contentCache.putString(t.getId() + "" , t.getContent());
+                                mArticles.add(t);
                             }
                             mPostPersenter.getArticlesCallBack(mArticles);
                         } catch (JSONException e) {
@@ -79,7 +79,9 @@ public class PostModel implements IPostModel {
                 try {
                     JSONArray jsonArray = new JSONObject(response).getJSONArray("replys");
                     for (int i = 0; i < jsonArray.length(); i++) {
-                        mArticles.add(new Article(jsonArray.getJSONObject(i)));
+                        Article t = new Article(jsonArray.getJSONObject(i));
+                        com.fuzho.nimingban.Application.contentCache.putString(t.getId()+"",t.getContent());
+                        mArticles.add(t);
                     }
                 } catch (JSONException e) {
                     //e.printStackTrace();
@@ -103,5 +105,25 @@ public class PostModel implements IPostModel {
     @Override
     public void getMenu() {
 
+    }
+    public static void getContent(String id, final Runnable run) {
+        com.fuzho.nimingban.Application.getRequestQueue().add(new JsonObjectRequest("https://h.nimingban.com/Api/thread/id/" + id + "/page/1",
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            String content = response.getString("content");
+                            run.run();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+
+                    }
+                }));
     }
 }

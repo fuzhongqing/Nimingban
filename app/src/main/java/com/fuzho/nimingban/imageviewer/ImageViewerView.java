@@ -9,6 +9,9 @@ import android.widget.ImageView;
 import com.fuzho.nimingban.Application;
 import com.fuzho.nimingban.MVPBaseActivity;
 import com.fuzho.nimingban.R;
+import com.fuzho.nimingban.imageloader.After;
+
+import uk.co.senab.photoview.PhotoViewAttacher;
 
 /**
  * Created by fuzho on 2016/9/19.
@@ -17,6 +20,7 @@ public class ImageViewerView extends MVPBaseActivity {
     private static final String TAG = "ImageViewerView";
 
     android.support.v7.app.ActionBar mActionBar;
+    PhotoViewAttacher mAttacher;
     ImageView mImageView;
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -27,6 +31,7 @@ public class ImageViewerView extends MVPBaseActivity {
         mActionBar.setDisplayHomeAsUpEnabled(true);
         mActionBar.setTitle("图片查看");
         mImageView = (ImageView) findViewById(R.id.imageView);
+        mAttacher = new PhotoViewAttacher(mImageView);
         doIntent(getIntent());
     }
 
@@ -39,7 +44,12 @@ public class ImageViewerView extends MVPBaseActivity {
     void doIntent(Intent intent) {
         String url = "http://img1.nimingban.com/image/" + intent.getStringExtra("url");
         //String url = "http://img1.nimingban.com/image/" + "2016-06-14/57601ee971540.gif";
-        Application.getLoader().from(url).to(mImageView);
+        Application.getLoader().from(url).to(mImageView).after(new After() {
+            @Override
+            public void run() {
+                mAttacher.update();
+            }
+        });
     }
 
     @Override

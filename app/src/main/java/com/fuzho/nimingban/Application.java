@@ -5,6 +5,7 @@ import com.android.volley.toolbox.Volley;
 import com.fuzho.nimingban.imageloader.Loader;
 import com.fuzho.nimingban.imageloader.SampleLruImageCache;
 import com.fuzho.nimingban.imageloader.VolleyBasedNetWork;
+import com.fuzho.nimingban.tools.Lru;
 
 /**
  * Created by fuzhongqing on 16/8/27.
@@ -20,6 +21,7 @@ public class Application extends android.app.Application{
     public static Loader getLoader() {
         return mLoader;
     }
+    public static Lru contentCache;
     @Override
     public void onCreate() {
         super.onCreate();
@@ -32,5 +34,10 @@ public class Application extends android.app.Application{
                         .LoadPicWith(R.drawable.img_loading)
                         .FailedPicWith(R.drawable.img_loading);
         }
+
+        if (contentCache == null) {
+            contentCache = new Lru();
+        }
+
     }
 }
