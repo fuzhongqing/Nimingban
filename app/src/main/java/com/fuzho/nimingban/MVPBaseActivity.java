@@ -21,7 +21,7 @@ public abstract class MVPBaseActivity<T extends BasePresenter> extends AppCompat
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mPresenter.dettachView();
+        if (mPresenter.isAttached()) mPresenter.detachView();
     }
 
     protected abstract T getPresenter();
